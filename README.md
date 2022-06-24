@@ -1,6 +1,6 @@
 # dawnbreaker-dkp-backend
 
-Side Project to migrate from our Google Doc to a website.
+Side Project to migrate our DKP management from our Google Doc to a website.
 
 I was looking for an excuse to work with Docker and practice deployments using it so this was perfect.
 
