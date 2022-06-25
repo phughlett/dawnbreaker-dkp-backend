@@ -4,7 +4,7 @@ const db = require("../database/controllers");
 
 router.route("/")
 .get((req, res) => {
-  db.getCharacters()
+  db.getRaidTeams()
     .then((response) => res.status(200).json(response))
     .catch((err) => {
       console.error("Error @ /raidteams GET", err);
@@ -12,9 +12,9 @@ router.route("/")
     });
 })
 .post((req, res) => {
-  let {newTeamName} = req.body;
+  let {name, raidTeam} = req.body;
 
-  db.addRaidTeam(newTeamName)
+  db.addCharacter(name, raidTeam)
   .then(response => res.status(200).json(response))
   .catch((err) => {
     console.error('Error creating new raid team: ', err)

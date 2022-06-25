@@ -4,11 +4,13 @@ const cors = require('cors')
 const app = express()
 
 //routes
-const raidTeams = require('./routes/raidTeam')
+const raidTeamsRoute = require('./routes/raidTeam')
+const characterRoute = require('./routes/characters')
 
 app.use(express.json());
 app.use(morgan('tiny'));
-app.use("/raidteam", raidTeams);
+app.use('/raidteam', raidTeamsRoute);
+app.use('/character', characterRoute);
 
 
 app.get('/', (req, res) => {

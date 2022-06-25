@@ -6,7 +6,7 @@ exports.up = function(knex) {
 
   return knex.schema.createTable('ledger', (table) =>{
     table.increments('id').primary();
-    table.integer('raid_team').references('id').inTable('raid_teams').notNullable();
+    table.integer('raid_team').references('id').inTable('raid_teams')
     table.integer('character_name').references('id').inTable('characters').notNullable();
     table.string('item').notNullable();
     table.integer('dkp').notNullable();
