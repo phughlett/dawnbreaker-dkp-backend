@@ -32,6 +32,10 @@ module.exports = {
     return knex('ledger').select();
   },
 
+  getLedgerByRaidTeam: (raid_team) => {
+    return knex('ledger').where({raid_team}).select();
+  },
+
   addTransaction: (raid_team, character_name, item, dkp)=> {
     return knex('ledger').insert({raid_team, character_name, item, dkp});
   },

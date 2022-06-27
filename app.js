@@ -6,11 +6,13 @@ const app = express()
 //routes
 const raidTeamsRoute = require('./routes/raidTeam')
 const characterRoute = require('./routes/characters')
+const sessionRoute = require('./routes/session')
 
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use('/raidteam', raidTeamsRoute);
 app.use('/character', characterRoute);
+app.use('/session', sessionRoute);
 
 
 app.get('/', (req, res) => {
