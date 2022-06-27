@@ -8,6 +8,7 @@ const raidTeamsRoute = require('./routes/raidTeam')
 const characterRoute = require('./routes/characters')
 const sessionRoute = require('./routes/session')
 
+app.use(cors())
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use('/raidteam', raidTeamsRoute);
