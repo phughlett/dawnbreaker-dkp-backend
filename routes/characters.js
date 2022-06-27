@@ -1,6 +1,7 @@
 import express from 'express';
-const characterRoute = express.Router();
 import db from '../database/controllers.js'
+
+const characterRoute = express.Router();
 
 characterRoute.route("/")
 .get((req, res) => {

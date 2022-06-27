@@ -1,8 +1,8 @@
 import express from 'express';
 import db from '../database/controllers.js'
 import { initStringParser } from '../helperFunctions/helperFunctions.js'
-const sessionRoute = express.Router();
 
+const sessionRoute = express.Router();
 
 sessionRoute.route("/")
 .get((req, res) => {

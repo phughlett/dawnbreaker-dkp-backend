@@ -1,8 +1,7 @@
 import express from 'express';
 import db from '../database/controllers.js'
+
 const raidTeamRoute = express.Router();
-
-
 
 raidTeamRoute.route("/")
 .get((req, res) => {
