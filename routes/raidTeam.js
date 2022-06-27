@@ -5,7 +5,7 @@ const raidTeamRoute = express.Router();
 
 raidTeamRoute.route("/")
 .get((req, res) => {
-  db.getCharacters()
+  db.getRaidTeams()
     .then((response) => res.status(200).json(response))
     .catch((err) => {
       console.error("Error @ /raidteams GET", err);

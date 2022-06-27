@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 const app = express()
 
 
@@ -14,6 +15,7 @@ import sessionRoute from './routes/session.js'
 
 app.use(cors())
 app.use(express.json());
+app.use(cookieParser())
 app.use(morgan('tiny'));
 app.use('/raidteam', raidTeamRoute);
 app.use('/character', characterRoute);

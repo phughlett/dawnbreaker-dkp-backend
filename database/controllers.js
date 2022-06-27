@@ -1,4 +1,4 @@
-import myKnex from './dbConnection.js';
+import knex from './dbConnection.js';
 
 const db = {
     //Raid Team
@@ -41,6 +41,16 @@ const db = {
 
   removeTransaction: (id) => {
     return knex('ledger').where({id}).del();
+  },
+
+  //Active Sessions
+
+  addActiveSession: (name) => {
+    return knex('active_sessions').insert({name})
+  },
+
+  deleteActiveSession: (name) => {
+    return knex('active_sessions').where({name}).del()
   }
 
 }
