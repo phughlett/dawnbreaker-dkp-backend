@@ -1,9 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../database/controllers");
-import {initStringParser } from './helperFunctions/helperFunctions'
+import express from 'express';
+import db from '../database/controllers.js'
+import { initStringParser } from '../helperFunctions/helperFunctions.js'
+const sessionRoute = express.Router();
 
-router.route("/")
+
+sessionRoute.route("/")
 .get((req, res) => {
   //ToDo
   //Likely there will only be one session at a time but we could support multiple by creating the tables with unique hashes
@@ -19,7 +20,8 @@ router.route("/")
 
   if(action === 'CREATE'){
     //Create a table to hold the session data
-    let 
+    let useableDate = initStringParser(sessionData);
+
   }else if(action === 'UPDATE'){
     //Update Session table based on Master Looter input
   }else{
@@ -29,4 +31,4 @@ router.route("/")
 
 
 
-module.exports = router;
+export default sessionRoute;

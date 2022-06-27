@@ -1,8 +1,10 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../database/controllers");
+import express from 'express';
+import db from '../database/controllers.js'
+const raidTeamRoute = express.Router();
 
-router.route("/")
+
+
+raidTeamRoute.route("/")
 .get((req, res) => {
   db.getCharacters()
     .then((response) => res.status(200).json(response))
@@ -23,4 +25,4 @@ router.route("/")
 
 })
 
-module.exports = router;
+export default raidTeamRoute

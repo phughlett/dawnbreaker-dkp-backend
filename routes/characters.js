@@ -1,8 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const db = require("../database/controllers");
+import express from 'express';
+const characterRoute = express.Router();
+import db from '../database/controllers.js'
 
-router.route("/")
+characterRoute.route("/")
 .get((req, res) => {
   db.getRaidTeams()
     .then((response) => res.status(200).json(response))
@@ -23,4 +23,4 @@ router.route("/")
 
 })
 
-module.exports = router;
+export default characterRoute;

@@ -1,8 +1,7 @@
-const knex = require('./dbConnection');
+import myKnex from './dbConnection.js';
 
-module.exports = {
-  //Raid Team
-
+const db = {
+    //Raid Team
   getRaidTeams: () => {
     return knex('raid_teams').select();
   },
@@ -45,3 +44,6 @@ module.exports = {
   }
 
 }
+
+export default db;
+

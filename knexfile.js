@@ -1,10 +1,10 @@
 // Update with your config settings.
-require('dotenv').config();
+import 'dotenv/config';
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-module.exports = {
+const knexfile = {
 
   development: {
     client: 'postgresql',
@@ -20,3 +20,7 @@ module.exports = {
   }
 
 };
+
+export default knexfile;
+
+

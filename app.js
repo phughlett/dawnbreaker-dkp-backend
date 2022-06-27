@@ -1,17 +1,21 @@
-const express = require("express")
-const morgan = require("morgan")
-const cors = require('cors')
+import express from 'express';
+import morgan from 'morgan';
+import cors from 'cors'
 const app = express()
 
+
 //routes
-const raidTeamsRoute = require('./routes/raidTeam')
-const characterRoute = require('./routes/characters')
-const sessionRoute = require('./routes/session')
+import raidTeamRoute from './routes/raidTeam.js'
+import characterRoute from './routes/characters.js'
+import sessionRoute from './routes/session.js'
+// const raidTeamsRoute = require('./routes/raidTeam')
+// const characterRoute = require('./routes/characters')
+// const sessionRoute = require('./routes/session')
 
 app.use(cors())
 app.use(express.json());
 app.use(morgan('tiny'));
-app.use('/raidteam', raidTeamsRoute);
+app.use('/raidteam', raidTeamRoute);
 app.use('/character', characterRoute);
 app.use('/session', sessionRoute);
 
@@ -21,4 +25,4 @@ app.get('/', (req, res) => {
 })
 
 
-module.exports = app;
+export default app;
