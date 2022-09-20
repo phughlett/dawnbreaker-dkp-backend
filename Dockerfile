@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . /app
 
 RUN npm config set cache /tmp --global
-RUN npm install knex -g 
+RUN npm install knex --save-dev
 RUN npm install
 
 EXPOSE 3000
