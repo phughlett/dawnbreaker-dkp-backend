@@ -5,7 +5,7 @@ const characterRoute = express.Router();
 
 characterRoute.route("/")
 .get((req, res) => {
-  db.getRaidTeams()
+  db.getCharacters()
     .then((response) => res.status(200).json(response))
     .catch((err) => {
       console.error("Error @ /raidteams GET", err);

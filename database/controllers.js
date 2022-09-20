@@ -16,9 +16,13 @@ const db = {
     return knex('characters').select();
   },
 
-  addCharacter: (name, raid_team) => {
+  getCharactersByName: (namesArray) => {
+    return knex('characters').whereIn('name', namesArray)
+  },
+
+  addCharacter: (name) => {
     const dkp = 10;//initial balance for joining
-    return knex('characters').insert({name, raid_team, dkp})
+    return knex('characters').insert({name, dkp})
   },
 
   adjustDKP: (name, amount) => {
@@ -51,6 +55,25 @@ const db = {
 
   deleteActiveSession: (name) => {
     return knex('active_sessions').where({name}).del()
+  },
+
+  getSessionCharacters: (sessionName) => {
+    return knex(`${sessionName}_characters`).select();
+  },
+
+  getSessionLedger: (sessionName) => {
+    return knex(`${sessionName}_ledger`).select();
+  },
+
+  updateSessionCharacters: (sessionName, raid_team, character_name) => {
+
+    return knex(`${sessionName}_characters`).insert({raid_team, character_name})
+
+  },
+
+  updateSessionLedger: (sessionName, raid_team, character_id, item, dkp ) => {
+
+    return knex(`${sessionName}_ledger`).insert({raid_team, character_name, item, dkp})
   }
 
 }

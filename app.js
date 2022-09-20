@@ -9,9 +9,7 @@ const app = express()
 import raidTeamRoute from './routes/raidTeam.js'
 import characterRoute from './routes/characters.js'
 import sessionRoute from './routes/session.js'
-// const raidTeamsRoute = require('./routes/raidTeam')
-// const characterRoute = require('./routes/characters')
-// const sessionRoute = require('./routes/session')
+
 
 app.use(cors())
 app.use(express.json());

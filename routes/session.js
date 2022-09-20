@@ -1,7 +1,11 @@
 import express from "express";
 import db from "../database/controllers.js";
 import { initStringParser } from "../helperFunctions/helperFunctions.js";
-import { createSession, stopSession } from "../core/sessionManager.js";
+import {
+  createSession,
+  stopSession,
+  checkForNewCharacters,
+} from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
 
@@ -13,9 +17,7 @@ sessionRoute
   })
   .post((req, res) => {
     console.log(req.body);
-    let { sessionData, action } = req.body;
-
-
+    let { sessionData, action, sessionName } = req.body;
 
     if (action === "CREATE") {
       //validate string
@@ -27,18 +29,15 @@ sessionRoute
       }
       //Create a table to hold the session data
       let characterArray = initStringParser(sessionData);
-      createSession("new")
-        .then(() => db.addActiveSession("new"))
-        .catch((err) => console.error(err));
+      createSession(sessionName, characterArray)
 
-      res.status(200).json(characterArray);
     } else if (action === "UPDATE") {
       //Update Session table based on Master Looter input
     } else if (action === "CLOSE") {
       //Closing a session will process the session table data and update the ledger + character dkp and close the table
-      stopSession("new")
-      .then(() => db.deleteActiveSession('new'))
-      .catch(err => console.error(err))
+      stopSession(sessionName)
+        .then(() => db.deleteActiveSession(sessionName))
+        .catch((err) => console.error(err));
     } else {
       return res.status(406).send("Invalid format.");
     }
