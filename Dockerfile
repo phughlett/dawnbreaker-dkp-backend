@@ -9,7 +9,6 @@ WORKDIR /app
 COPY . /app
 
 RUN npm config set cache /tmp --g
-RUN npm install knex --save-dev
 RUN npm install
 
 
