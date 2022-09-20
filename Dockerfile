@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY . /app
 
-RUN npm config set cache /tmp --g
+RUN npm install -g npm@latest
 RUN npm install
 
 
