@@ -5,6 +5,7 @@ import {
   createSession,
   stopSession,
   checkForNewCharacters,
+  getAddonInitString,
 } from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
@@ -12,10 +13,11 @@ const sessionRoute = express.Router();
 sessionRoute
   .route("/")
   .get((req, res) => {
-    //ToDo
-    //Likely there will only be one session at a time but we could support multiple by creating the tables with unique hashes
+    db.getAllActiveSessions()
+      .then((response) => res.status(200).json(response))
+      .catch((err) => console.log(err));
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
     console.log(req.body);
     let { sessionData, action, sessionName } = req.body;
 
@@ -29,8 +31,18 @@ sessionRoute
       }
       //Create a table to hold the session data
       let characterArray = initStringParser(sessionData);
-      createSession(sessionName, characterArray)
+      createSession(sessionName, characterArray);
 
+      db.getCharacters()
+        .then((response) => {
+          let addonInit = response.map((raider) => {
+            return `["${raider.name}"]="${raider.dkp}"`;
+          });
+          addonInit = addonInit.toString();
+          addonInit = `{${addonInit}}`;
+          return res.status(200).json(addonInit);
+        })
+        .catch((err) => console.error(err));
     } else if (action === "UPDATE") {
       //Update Session table based on Master Looter input
     } else if (action === "CLOSE") {
@@ -42,5 +54,19 @@ sessionRoute
       return res.status(406).send("Invalid format.");
     }
   });
+sessionRoute.route("/addonInit").get((req, res) => {
+  db.getCharacters().then((response) => {
+    let addonInit = response.map((raider) => {
+      return `["${raider.name}"]="${raider.dkp}"`;
+    });
+    addonInit = addonInit.toString();
+    addonInit = `{${addonInit}}`;
+    return res.status(200).json(addonInit);
+  })
+  .catch((err) => {
+    console.error(err);
+    return res.status(500).json(err);
+  });
+});
 
 export default sessionRoute;

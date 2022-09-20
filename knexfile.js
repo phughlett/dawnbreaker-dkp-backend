@@ -12,7 +12,8 @@ const knexfile = {
   },
 
   staging: {
-
+    client: 'postgresql',
+    connection: process.env.CONNECTION
   },
 
   production: {

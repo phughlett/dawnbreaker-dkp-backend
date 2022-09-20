@@ -66,3 +66,9 @@ export async function checkForNewCharacters(sessionData) {
   characterList = await db.getCharacters();
   return characterList;
 }
+
+export function getAddonInitString(){
+
+
+
+}

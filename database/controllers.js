@@ -49,6 +49,10 @@ const db = {
 
   //Active Sessions
 
+  getAllActiveSessions:() => {
+    return knex('active_sessions').select();
+  },
+
   addActiveSession: (name) => {
     return knex('active_sessions').insert({name})
   },
