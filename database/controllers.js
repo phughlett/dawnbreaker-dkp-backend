@@ -17,6 +17,9 @@ const db = {
   },
 
   getCharactersByName: (namesArray) => {
+    if(typeof namesArray === 'string'){
+      return knex('characters').where('name', namesArray)
+    }
     return knex('characters').whereIn('name', namesArray)
   },
 
@@ -69,15 +72,8 @@ const db = {
     return knex(`${sessionName}_ledger`).select();
   },
 
-  updateSessionCharacters: (sessionName, raid_team, character_name) => {
-
-    return knex(`${sessionName}_characters`).insert({raid_team, character_name})
-
-  },
-
-  updateSessionLedger: (sessionName, raid_team, character_id, item, dkp ) => {
-
-    return knex(`${sessionName}_ledger`).insert({raid_team, character_name, item, dkp})
+  updateSessionLedger: (sessionName, raid_team, character_id, item, itemId, dkp ) => {
+    return knex(`${sessionName}_ledger`).insert({raid_team, character_id, item, itemId, dkp})
   }
 
 }

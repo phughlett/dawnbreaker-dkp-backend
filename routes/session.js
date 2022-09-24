@@ -5,7 +5,7 @@ import {
   createSession,
   stopSession,
   checkForNewCharacters,
-  getAddonInitString,
+  addItemBidtoRaidLedger
 } from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
@@ -20,6 +20,7 @@ sessionRoute
   .post(async (req, res) => {
     console.log(req.body);
     let { sessionData, action, sessionName } = req.body;
+
 
     if (action === "CREATE") {
       //validate string
@@ -50,6 +51,18 @@ sessionRoute
       stopSession(sessionName)
         .then(() => db.deleteActiveSession(sessionName))
         .catch((err) => console.error(err));
+    }else if(action === 'ADD_ITEM'){
+
+      let {character, itemId, itemName, dkpAmount, sessionName} = req.body;
+      addItemBidtoRaidLedger(character, itemId, itemName, dkpAmount, sessionName)
+      .then((response) => {
+        res.status(200).json(response)
+      })
+      .catch((err) => {
+        console.error(err)
+        res.status(500).json(error)
+      })
+
     } else {
       return res.status(406).send("Invalid format.");
     }

@@ -2,18 +2,13 @@ import knex from "../database/dbConnection.js";
 import db from "../database/controllers.js";
 
 export async function createSession(sessionName, sessionData) {
-  await knex.schema.createTable(`${sessionName}_characters`, (table) => {
-    table.increments("id").primary();
-    table.integer("raid_team").references("id").inTable("raid_teams");
-    table.string("character_name");
-    table.timestamps(true, true);
-  });
 
   await knex.schema.createTable(`${sessionName}_ledger`, (table) => {
     table.increments("id").primary();
     table.integer("raid_team").references("id").inTable("raid_teams");
-    table.integer("character_id").references('id').inTable(`${sessionName}_characters`);
+    table.integer("character_id").references("id").inTable(`characters`);
     table.string("item").notNullable();
+    table.string("itemId").notNullable();
     table.integer("dkp").notNullable();
     table.timestamps(true, true);
   });
@@ -21,22 +16,18 @@ export async function createSession(sessionName, sessionData) {
   await db.addActiveSession(sessionName);
   let seedData = await checkForNewCharacters(sessionData);
 
-  seedData = await db.getCharactersByName(sessionData)
+  seedData = await db.getCharactersByName(sessionData);
 
   //add session raiders to session table
   await seedData.forEach((row) => {
-    db.updateSessionCharacters(
-      sessionName,
-      row.raid_team,
-      row.name
-    )
-      .catch((err) => console.error(err));
+    db.updateSessionLedger(sessionName, row.raid_team, row.id, 'Attendance DKP', '0', 10).catch(
+      (err) => console.error(err)
+    );
   });
 }
 
 export async function stopSession(sessionName) {
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
-  await knex.schema.dropTableIfExists(`${sessionName}_characters`);
 }
 
 export async function checkForNewCharacters(sessionData) {
@@ -67,8 +58,16 @@ export async function checkForNewCharacters(sessionData) {
   return characterList;
 }
 
-export function getAddonInitString(){
+export async function addItemBidtoRaidLedger(charName, itemId, itemName, dkpAmount, sessionName) {
+  let dkpSpent = parseInt(dkpAmount)
+  let character = await db.getCharactersByName(charName)
+  character = character[0]
+  let newdkpAmount = character.dkp + dkpSpent
+  let update = await db.updateSessionLedger(sessionName, character.raid_team, character.id, itemName, itemId, dkpAmount)
+  return db.adjustDKP(charName, newdkpAmount);
 
+}
 
+export async function removeTransactionFromRaidLedger(id, sessionName){
 
 }
