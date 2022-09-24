@@ -12,6 +12,6 @@
   },
   "scripts": {
     "start": "npm run knex:startup && node index.js",
-    "knex:startup": "knex migrate:latest"
+    "knex:startup": "npx knex migrate:latest"
   }
 }
