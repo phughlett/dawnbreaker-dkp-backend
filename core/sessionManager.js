@@ -20,13 +20,33 @@ export async function createSession(sessionName, sessionData) {
 
   //add session raiders to session table
   await seedData.forEach((row) => {
-    db.updateSessionLedger(sessionName, row.raid_team, row.id, 'Attendance DKP', '0', 10).catch(
+    db.insertSessionLedger(sessionName, row.raid_team, row.id, 'Attendance DKP', '0', 10).catch(
       (err) => console.error(err)
     );
   });
 }
 
 export async function stopSession(sessionName) {
+
+  let ledgerUpdate = await db.getSessionLedger(sessionName);
+
+  ledgerUpdate.sort((a,b) => {
+    return b.id - a.id;
+  })
+
+  ledgerUpdate.forEach(async (entry) => {
+    await db.addLedgerTransaction(entry.raid_team, entry.character_id, entry.item, entry.itemId, entry.dkp)
+  })
+
+  let dkpUpdate = ledgerUpdate.filter((entry) => entry.itemId === '0');
+
+  dkpUpdate.forEach(async (entry) => {
+    let character = await db.getCharacterById(entry.id);
+    character = character[0];
+    let dkpAdjust = parseInt(entry.dkp);
+    dkpAdjust = character.dkp + dkpAdjust;
+    await db.adjustDKP(character.name, dkpAdjust);
+  })
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
 }
 
@@ -63,11 +83,48 @@ export async function addItemBidtoRaidLedger(charName, itemId, itemName, dkpAmou
   let character = await db.getCharactersByName(charName)
   character = character[0]
   let newdkpAmount = character.dkp + dkpSpent
-  let update = await db.updateSessionLedger(sessionName, character.raid_team, character.id, itemName, itemId, dkpAmount)
-  return db.adjustDKP(charName, newdkpAmount);
+  let update = await db.insertSessionLedger(sessionName, character.raid_team, character.id, itemName, itemId, dkpAmount)
+  await db.adjustDKP(charName, newdkpAmount);
+
+  return db.getSessionLedger(sessionName);
 
 }
 
 export async function removeTransactionFromRaidLedger(id, sessionName){
 
 }
+
+export async function updateSessionLedger(sessionId, update){
+  let {id, raid_team, character_id, item, itemId, dkp} = update;
+  let session = await db.getActiveSessionByID(sessionId);
+  session = session[0];
+  return await db.updateSessionLedger(session.name, id, raid_team, character_id, item, itemId, dkp);
+}
+
+export async function deleteSessionLedgerEntry(sessionId, update){
+  let {id, raid_team, character_id, item, itemId, dkp} = update;
+  let session = await db.getActiveSessionByID(sessionId);
+  session = session[0];
+
+  await db.deleteSessionLedgerEntry(session.name, id);
+
+  if(itemId !== '0'){
+    dkp = parseInt(dkp);
+    dkp = dkp * -1;
+    console.log(dkp);
+    let character = await db.getCharacterById(character_id);
+    character = character[0];
+    let newdkpAmount = character.dkp + dkp;
+
+
+    await db.adjustDKP(character.name, newdkpAmount);
+
+    return await db.getSessionLedger(session.name);
+
+  }
+
+  return await db.getSessionLedger(session.name);
+
+
+}
+

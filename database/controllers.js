@@ -23,10 +23,18 @@ const db = {
     return knex('characters').whereIn('name', namesArray)
   },
 
+  getCharacterById: (id) => {
+    return knex('characters').where({id})
+  },
+
   addCharacter: (name) => {
     const dkp = 10;//initial balance for joining
     return knex('characters').insert({name, dkp})
   },
+
+  updateCharacterRaidTeam: (name, raid_team) => {
+    return knex('characters').where({name}).update({raid_team});
+  }
 
   adjustDKP: (name, amount) => {
     return knex('characters').where({name}).update({dkp: amount});
@@ -42,11 +50,11 @@ const db = {
     return knex('ledger').where({raid_team}).select();
   },
 
-  addTransaction: (raid_team, character_name, item, dkp)=> {
-    return knex('ledger').insert({raid_team, character_name, item, dkp});
+  addLedgerTransaction: (raid_team, character_name, item, itemId, dkp)=> {
+    return knex('ledger').insert({raid_team, character_name, item, itemId, dkp});
   },
 
-  removeTransaction: (id) => {
+  removeLedgerTransaction: (id) => {
     return knex('ledger').where({id}).del();
   },
 
@@ -55,6 +63,11 @@ const db = {
   getAllActiveSessions:() => {
     return knex('active_sessions').select();
   },
+
+  getActiveSessionByID:(id) => {
+    return knex('active_sessions').where({id}).select();
+  },
+
 
   addActiveSession: (name) => {
     return knex('active_sessions').insert({name})
@@ -72,8 +85,16 @@ const db = {
     return knex(`${sessionName}_ledger`).select();
   },
 
-  updateSessionLedger: (sessionName, raid_team, character_id, item, itemId, dkp ) => {
+  insertSessionLedger: (sessionName, raid_team, character_id, item, itemId, dkp ) => {
     return knex(`${sessionName}_ledger`).insert({raid_team, character_id, item, itemId, dkp})
+  },
+
+  updateSessionLedger: (sessionName, id, raid_team, character_id, item, itemId, dkp) => {
+    return knex(`${sessionName}_ledger`).where({id}).update({raid_team, character_id, item, itemId, dkp})
+  },
+
+  deleteSessionLedgerEntry: (sessionName, id) => {
+    return knex(`${sessionName}_ledger`).where({id}).del()
   }
 
 }
