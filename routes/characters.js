@@ -30,9 +30,10 @@ characterRoute
 
   })
   .patch(async(req, res)=> {
-    let {raid_team, name, dkp} = req.body.update;
+    console.log(req.body.update)
+    let {raid_team, name, dkp, characterClass, role} = req.body.update;
 
-    await db.updateCharacter(name, raid_team, dkp);
+    await db.updateCharacter(name, raid_team, dkp, characterClass, role);
 
     let updatedCharacters = await db.getCharacters
 
