@@ -9,6 +9,8 @@ exports.up = function(knex) {
     table.integer('raid_team').references('id').inTable('raid_teams');
     table.string('name').notNullable().unique();
     table.integer('dkp').notNullable();
+    table.string('class')
+    table.string('role')
   })
 
 };

@@ -32,8 +32,8 @@ const db = {
     return knex('characters').insert({name, dkp})
   },
 
-  updateCharacterRaidTeam: (name, raid_team) => {
-    return knex('characters').where({name}).update({raid_team});
+  updateCharacter: (name, raid_team, dkp) => {
+    return knex('characters').where({name}).update({raid_team, dkp});
   },
 
   adjustDKP: (name, amount) => {

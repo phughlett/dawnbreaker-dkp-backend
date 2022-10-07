@@ -83,6 +83,9 @@ export async function addItemBidtoRaidLedger(charName, itemId, itemName, dkpAmou
   let character = await db.getCharactersByName(charName)
   character = character[0]
   let newdkpAmount = character.dkp + dkpSpent
+  if(newdkpAmount > 250){
+    newdkpAmount = 250;
+  }
   let update = await db.insertSessionLedger(sessionName, character.raid_team, character.id, itemName, itemId, dkpAmount)
   await db.adjustDKP(charName, newdkpAmount);
 

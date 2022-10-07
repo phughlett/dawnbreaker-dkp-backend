@@ -24,4 +24,21 @@ characterRoute
       });
   });
 
+  characterRoute
+  .route("/:characterName")
+  .get((req,res) => {
+
+  })
+  .patch(async(req, res)=> {
+    let {raid_team, name, dkp} = req.body.update;
+
+    await db.updateCharacter(name, raid_team, dkp);
+
+    let updatedCharacters = await db.getCharacters
+
+    res.status(200).json(updatedCharacters)
+
+  })
+
+
 export default characterRoute;
