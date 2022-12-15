@@ -77,8 +77,8 @@ const db = {
     return knex('active_sessions').where({name}).del()
   },
 
-  getSessionCharacters: (sessionName) => {
-    return knex(`${sessionName}_characters`).select();
+  checkifCharacterInSession: (sessionName, character_id) => {
+    return knex(`${sessionName}_ledger`).select().where({character_id});
   },
 
   getSessionLedger: (sessionName) => {

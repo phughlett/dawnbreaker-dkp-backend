@@ -26,7 +26,7 @@ export async function createSession(sessionName, sessionData) {
   });
 }
 
-export async function stopSession(sessionName) {
+export async function processSession(sessionName) {
 
   let ledgerUpdate = await db.getSessionLedger(sessionName);
 
@@ -51,12 +51,16 @@ export async function stopSession(sessionName) {
 }
 
 export async function checkForNewCharacters(sessionData) {
+
+  if(typeof sessionData === 'string'){
+    sessionData = [sessionData]
+  }
   console.log("Checking for New Characters...");
   let characterList = [];
   characterList = await db.getCharacters();
 
   //check for new raiders and add them to the database if they aren't found
-  sessionData.forEach((character) => {
+  awaitsessionData.forEach((character) => {
     let matchedName = characterList.filter((match) => {
       return match.name === character;
     });
@@ -74,14 +78,43 @@ export async function checkForNewCharacters(sessionData) {
   });
   console.log("New Character Check Complete.");
 
-  characterList = await db.getCharacters();
-  return characterList;
+  return db.getCharacters();
+
 }
 
-export async function addItemBidtoRaidLedger(charName, itemId, itemName, dkpAmount, sessionName) {
-  let dkpSpent = parseInt(dkpAmount)
-  let character = await db.getCharactersByName(charName)
+export async function addCharacterToSession(sessionName, character){
+  const databaseCharacterCheck = await db.getCharactersByName(character)
+
+  if(databaseCharacterCheck.length === 0){
+    let characterList = await checkForNewCharacters(character);
+  }
+
+  character = await db.getCharactersByName(character);
   character = character[0]
+  console.log(character)
+
+
+
+  let sessionCharacterCheck = await db.checkifCharacterInSession(sessionName, character.id)
+  if(sessionCharacterCheck.length > 0) throw 'Character already in Session!'
+
+  db.insertSessionLedger(sessionName, character.raid_team, character.id, 'Attendance DKP', '0', 10).catch(err => console.error(err))
+
+  return db.getSessionLedger(sessionName);
+}
+
+
+export async function addItemBidtoRaidLedger(charName, itemId, itemName, dkpAmount, sessionName) {
+  let character = await db.getCharactersByName(charName)
+  if (character.length === 0) throw 'Character does not exist!'
+  character = character[0]
+
+  let charId = character.id;
+  const sessionChars = await db.checkifCharacterInSession(sessionName, charId);
+  if(sessionChars.length === 0) throw 'Character not in session!'
+
+
+  let dkpSpent = parseInt(dkpAmount)
   let newdkpAmount = character.dkp + dkpSpent
   if(newdkpAmount > 250){
     newdkpAmount = 250;
