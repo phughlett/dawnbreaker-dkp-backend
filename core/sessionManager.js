@@ -59,24 +59,20 @@ export async function checkForNewCharacters(sessionData) {
   let characterList = [];
   characterList = await db.getCharacters();
 
-  //check for new raiders and add them to the database if they aren't found
-  awaitsessionData.forEach((character) => {
-    let matchedName = characterList.filter((match) => {
-      return match.name === character;
-    });
-
-    if (matchedName.length === 0) {
-      db.addCharacter(character)
-        .then(() => console.log("Added new character: ", character))
-        .catch((err) =>
-          console.error(
-            "Error adding character while initiating session: ",
-            err
-          )
-        );
+  for(let i = 0; i< sessionData.length; ++i){
+    let character = sessionData[i];
+    let matchedName = characterList.filter((match) => match.name === character)
+    if(matchedName.length === 0){
+      await db.addCharacter(character)
+      console.log("Added new character: ", character)
     }
-  });
-  console.log("New Character Check Complete.");
+
+  }
+
+  console.log("New Character Check Complete.")
+
+
+
 
   return db.getCharacters();
 
@@ -98,7 +94,7 @@ export async function addCharacterToSession(sessionName, character){
   let sessionCharacterCheck = await db.checkifCharacterInSession(sessionName, character.id)
   if(sessionCharacterCheck.length > 0) throw 'Character already in Session!'
 
-  db.insertSessionLedger(sessionName, character.raid_team, character.id, 'Attendance DKP', '0', 10).catch(err => console.error(err))
+  await db.insertSessionLedger(sessionName, character.raid_team, character.id, 'Attendance DKP', '0', 10).catch(err => console.error(err))
 
   return db.getSessionLedger(sessionName);
 }

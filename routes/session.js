@@ -8,7 +8,7 @@ import {
   addItemBidtoRaidLedger,
   updateSessionLedger,
   deleteSessionLedgerEntry,
-  addCharacterToSession
+  addCharacterToSession,
 } from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
@@ -39,8 +39,6 @@ sessionRoute
       let activeSessions = await db.getAllActiveSessions();
 
       res.status(200).json(activeSessions);
-
-
     } else if (action === "UPDATE") {
       //Update Session table based on Master Looter input
     } else if (action === "CLOSE") {
@@ -61,16 +59,15 @@ sessionRoute
           res.status(200).json(response);
         })
         .catch(async (err) => {
-          let currentSession = await db.getSessionLedger(sessionName)
+          let currentSession = await db.getSessionLedger(sessionName);
 
           let error = {};
-          error.data = currentSession
-          error.message = err
+          error.data = currentSession;
+          error.message = err;
           res.status(400).json(error);
         });
-    }else if(action === "REMOVE_ITEM"){
-
-    }else {
+    } else if (action === "REMOVE_ITEM") {
+    } else {
       return res.status(406).send("Invalid format.");
     }
   });
@@ -89,58 +86,54 @@ sessionRoute.route("/addonInit").get((req, res) => {
       return res.status(500).json(err);
     });
 });
-sessionRoute.route("/:sessionId")
+sessionRoute
+  .route("/:sessionId")
   .get(async (req, res) => {
     let { sessionId } = req.params;
 
-
     let session = await db.getActiveSessionByID(sessionId);
 
-    if(session.length === 0){
-      return res.status(400).json("ID doesn't exist.")
+    if (session.length === 0) {
+      return res.status(400).json("ID doesn't exist.");
     }
 
     let sessionName = session[0].name;
 
     let sessionLedger = await db.getSessionLedger(sessionName);
 
-    let response = {sessionLedger, sessionName}
+    let response = { sessionLedger, sessionName };
     res.status(200).json(response);
-
   })
-  .post(async(req, res) => {
+  .post(async (req, res) => {
     let { sessionId } = req.params;
 
-    console.log(req.body)
-    let {action} = (req.body);
-    if(action === 'DELETE_ITEM'){
-      let {update} = req.body
+    console.log(req.body);
+    let { action } = req.body;
+    if (action === "DELETE_ITEM") {
+      let { update } = req.body;
       let updatedSession = await deleteSessionLedgerEntry(sessionId, update);
       return res.status(200).json(updatedSession);
-
-    }if(action === 'ADD_BENCH'){
-
-    }else if(action === "ADD_CHARACTER"){
-      let {character, session} = req.body
-      addCharacterToSession(session, character)
-      .then((response) => {
-        res.status(200).json(response)
-      })
-      .catch(async (err) => {
-        let currentSession = await db.getSessionLedger(session)
-
-        let error = {};
-        error.data = currentSession
-        error.message = err
-        res.status(400).json(error);
-      })
-
-
-    } else{
-      updateSessionLedger(sessionId, update);
-      res.status(200).json('Success!')
     }
+    if (action === "ADD_BENCH") {
+    } else if (action === "ADD_CHARACTER") {
+      let { character, session } = req.body;
+      addCharacterToSession(session, character)
+        .then((response) => {
+          console.log('Response back',response)
+          res.status(200).json(response);
+        })
+        .catch(async (err) => {
+          let currentSession = await db.getSessionLedger(session);
 
+          let error = {};
+          error.data = currentSession;
+          error.message = err;
+          res.status(400).json(error);
+        });
+    } else {
+      updateSessionLedger(sessionId, update);
+      res.status(200).json("Success!");
+    }
   });
 
 export default sessionRoute;
