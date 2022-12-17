@@ -41,9 +41,9 @@ export async function processSession(sessionName) {
   let dkpUpdate = ledgerUpdate.filter((entry) => entry.itemId === '0');
 
 
-  for(let i = 0; i< dkpUpdate.length; ++i){
+  for(let i = 0; i < dkpUpdate.length; ++i){
     let entry = dkpUpdate[i]
-    console.log('entry: ',entry)
+    console.log('entry: ',entry.id)
     let character = await db.getCharacterById(entry.id);
     console.log('result from db: ',character)
     character = character[0];
