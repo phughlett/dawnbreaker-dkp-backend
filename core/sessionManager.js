@@ -43,7 +43,9 @@ export async function processSession(sessionName) {
 
   for(let i = 0; i< dkpUpdate.length; ++i){
     let entry = dkpUpdate[i]
+    console.log('entry: ',entry)
     let character = await db.getCharacterById(entry.id);
+    console.log('result from db: ',character)
     character = character[0];
     let dkpAdjust = parseInt(entry.dkp);
     console.log(character)
