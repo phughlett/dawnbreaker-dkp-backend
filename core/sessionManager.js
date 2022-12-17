@@ -46,6 +46,7 @@ export async function processSession(sessionName) {
     let character = await db.getCharacterById(entry.id);
     character = character[0];
     let dkpAdjust = parseInt(entry.dkp);
+    console.log(character)
     dkpAdjust = character.dkp + dkpAdjust;
     await db.adjustDKP(character.name, dkpAdjust);
   }
