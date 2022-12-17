@@ -119,7 +119,6 @@ sessionRoute
       let { character, session } = req.body;
       addCharacterToSession(session, character)
         .then((response) => {
-          console.log('Response back',response)
           res.status(200).json(response);
         })
         .catch(async (err) => {
@@ -131,6 +130,7 @@ sessionRoute
           res.status(400).json(error);
         });
     } else {
+      let {update} = req.body;
       updateSessionLedger(sessionId, update);
       res.status(200).json("Success!");
     }
