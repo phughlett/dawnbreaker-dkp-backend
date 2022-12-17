@@ -40,14 +40,22 @@ export async function processSession(sessionName) {
 
   let dkpUpdate = ledgerUpdate.filter((entry) => entry.itemId === '0');
 
-  dkpUpdate.forEach(async (entry) => {
+
+  for(let i = 0; i< dkpUpdate.length; ++i){
+    let entry = dkpUpdate[i]
     let character = await db.getCharacterById(entry.id);
     character = character[0];
     let dkpAdjust = parseInt(entry.dkp);
     dkpAdjust = character.dkp + dkpAdjust;
     await db.adjustDKP(character.name, dkpAdjust);
-  })
+  }
+
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
+}
+
+export async function cancelSession(sessionName){
+  await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
+
 }
 
 export async function checkForNewCharacters(sessionData) {
@@ -130,6 +138,7 @@ export async function updateSessionLedger(sessionId, update){
   let {id, raid_team, character_id, item, itemId, dkp} = update;
   let session = await db.getActiveSessionByID(sessionId);
   session = session[0];
+  //TODO update character DKP
   return await db.updateSessionLedger(session.name, id, raid_team, character_id, item, itemId, dkp);
 }
 

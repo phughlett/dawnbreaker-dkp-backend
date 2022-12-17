@@ -132,6 +132,7 @@ sessionRoute
     } else {
       let {update} = req.body;
       updateSessionLedger(sessionId, update);
+      //TODO needs to return
       res.status(200).json("Success!");
     }
   });
