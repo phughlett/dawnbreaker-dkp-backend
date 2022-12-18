@@ -9,6 +9,7 @@ import {
   updateSessionLedger,
   deleteSessionLedgerEntry,
   addCharacterToSession,
+  cancelSession,
 } from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
@@ -46,7 +47,11 @@ sessionRoute
       processSession(sessionName)
         .then(() => db.deleteActiveSession(sessionName))
         .catch((err) => console.error(err));
-    } else if (action === "ADD_ITEM") {
+    } else if (action === "CANCEL") {
+      cancelSession(sessionName)
+        .then(() => db.deleteActiveSession(sessionName))
+        .catch((err) => console.error(err));
+    }else if (action === "ADD_ITEM") {
       let { character, itemId, itemName, dkpAmount, sessionName } = req.body;
       addItemBidtoRaidLedger(
         character,
@@ -132,7 +137,7 @@ sessionRoute
     } else {
       let {update} = req.body;
       updateSessionLedger(sessionId, update);
-      //TODO needs to return
+      //TODO needs to return the updated session
       res.status(200).json("Success!");
     }
   });

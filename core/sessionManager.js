@@ -14,49 +14,69 @@ export async function createSession(sessionName, sessionData) {
   });
 
   await db.addActiveSession(sessionName);
-  let seedData = await checkForNewCharacters(sessionData);
+  await checkForNewCharacters(sessionData);
 
-  seedData = await db.getCharactersByName(sessionData);
+  let seedData = await db.getCharactersByName(sessionData);
 
   //add session raiders to session table
-  await seedData.forEach((row) => {
-    db.insertSessionLedger(sessionName, row.raid_team, row.id, 'Attendance DKP', '0', 10).catch(
-      (err) => console.error(err)
-    );
-  });
+
+  for(let i = 0; i < seedData.length; ++i){
+    let row = seedData[i]
+    await db.insertSessionLedger(sessionName, row.raid_team, row.id, 'Attendance DKP', '0', 10)
+  }
+
 }
 
 export async function processSession(sessionName) {
 
   let ledgerUpdate = await db.getSessionLedger(sessionName);
 
-  ledgerUpdate.sort((a,b) => {
-    return b.id - a.id;
+  ledgerUpdate = ledgerUpdate.sort((a,b) => {
+    return a.id - b.id;
   })
 
-  ledgerUpdate.forEach(async (entry) => {
+
+  for(let i = 0; i < ledgerUpdate.length; ++i){
+    let entry = ledgerUpdate[i]
     await db.addLedgerTransaction(entry.raid_team, entry.character_id, entry.item, entry.itemId, entry.dkp)
-  })
+  }
 
   let dkpUpdate = ledgerUpdate.filter((entry) => entry.itemId === '0');
 
 
   for(let i = 0; i < dkpUpdate.length; ++i){
     let entry = dkpUpdate[i]
-    console.log('entry: ',entry)
     let character = await db.getCharacterById(entry.character_id);
-    console.log('result from db: ',character)
     character = character[0];
     let dkpAdjust = parseInt(entry.dkp);
-    console.log(character)
     dkpAdjust = character.dkp + dkpAdjust;
+    if(dkpAdjust > 250){
+      dkpAdjust = 250;
+    }
     await db.adjustDKP(character.name, dkpAdjust);
   }
-
+  await db.deleteActiveSession(sessionName)
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
+
 }
 
 export async function cancelSession(sessionName){
+
+  let ledgerUpdate = await db.getSessionLedger(sessionName);
+
+  let dkpRevert = ledgerUpdate.filter((entry) => entry.itemId !== '0');
+
+  for(let i = 0; i < dkpRevert.length; ++i){
+    let entry = dkpRevert[i]
+    let character = await db.getCharacterById(entry.character_id);
+    character = character[0];
+    let dkpAdjust = parseInt(entry.dkp);
+    dkpAdjust = character.dkp - dkpAdjust;//adjust dkp back dkpAdjust is negative so it adds it back
+    await db.adjustDKP(character.name, dkpAdjust);
+
+  }
+
+  await db.deleteActiveSession(sessionName);
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
 
 }
@@ -79,11 +99,7 @@ export async function checkForNewCharacters(sessionData) {
     }
 
   }
-
   console.log("New Character Check Complete.")
-
-
-
 
   return db.getCharacters();
 
@@ -155,7 +171,6 @@ export async function deleteSessionLedgerEntry(sessionId, update){
   if(itemId !== '0'){
     dkp = parseInt(dkp);
     dkp = dkp * -1;
-    console.log(dkp);
     let character = await db.getCharacterById(character_id);
     character = character[0];
     let newdkpAmount = character.dkp + dkp;
