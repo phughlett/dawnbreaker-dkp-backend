@@ -57,6 +57,7 @@ export async function processSession(sessionName) {
   }
   await db.deleteActiveSession(sessionName)
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
+  return db.getAllActiveSessions
 
 }
 
@@ -78,6 +79,7 @@ export async function cancelSession(sessionName){
 
   await db.deleteActiveSession(sessionName);
   await knex.schema.dropTableIfExists(`${sessionName}_ledger`);
+  return db.getAllActiveSessions
 
 }
 

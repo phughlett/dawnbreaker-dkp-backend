@@ -45,13 +45,17 @@ sessionRoute
     } else if (action === "CLOSE") {
       //Closing a session will process the session table data and update the ledger + character dkp and close the table
       processSession(sessionName)
-        .then(() => db.deleteActiveSession(sessionName))
+        .then((response) => {
+          res.status(200).json(response);
+        })
         .catch((err) => console.error(err));
     } else if (action === "CANCEL") {
       cancelSession(sessionName)
-        .then(() => db.deleteActiveSession(sessionName))
+        .then((response) => {
+          res.status(200).json(response);
+        })
         .catch((err) => console.error(err));
-    }else if (action === "ADD_ITEM") {
+    } else if (action === "ADD_ITEM") {
       let { character, itemId, itemName, dkpAmount, sessionName } = req.body;
       addItemBidtoRaidLedger(
         character,
@@ -135,7 +139,7 @@ sessionRoute
           res.status(400).json(error);
         });
     } else {
-      let {update} = req.body;
+      let { update } = req.body;
       updateSessionLedger(sessionId, update);
       //TODO needs to return the updated session
       res.status(200).json("Success!");
