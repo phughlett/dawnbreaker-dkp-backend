@@ -2,23 +2,13 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import fs from 'fs'
-import https from 'https'
+
 
 
 const app = express()
 
 
-https
-  .createServer(
-		// Provide the private and public key to the server by reading each
-		// file's content with the readFileSync() method.
-    {
-      key: fs.readFileSync("/src/key/privkey.pem"),
-      cert: fs.readFileSync("/src/key/fullchain.pem"),
-    },
-    app
-  )
+
 
 //routes
 import raidTeamRoute from './routes/raidTeam.js'
