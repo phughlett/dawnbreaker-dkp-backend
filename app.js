@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import fs from 'fs'
-const https = require("https");
+import https from 'https'
 
 
 const app = express()
