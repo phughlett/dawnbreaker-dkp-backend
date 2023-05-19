@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-const fs = require("fs");
+import fs from 'fs'
 const https = require("https");
 
 
