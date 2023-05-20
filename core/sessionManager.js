@@ -159,7 +159,26 @@ export async function updateSessionLedger(sessionId, update){
   let {id, raid_team, character_id, item, itemId, dkp} = update;
   let session = await db.getActiveSessionByID(sessionId);
   session = session[0];
-  //TODO update character DKP
+
+  let sessionLedger = await db.getSessionLedger(session.name)
+
+  let match = sessionLedger.find((sessionItem) => sessionItem.id === update.id)
+
+  let olddkp = match.dkp
+  update.dkp = parseInt(update.dkp)
+
+
+
+  let dkpDiff = update.dkp - olddkp
+
+  let character = await db.getCharacterById(character_id);
+  character = character[0];
+  let newdkpAmount = character.dkp + dkpDiff;
+
+  await db.adjustDKP(character.name, newdkpAmount);
+
+
+
   return await db.updateSessionLedger(session.name, id, raid_team, character_id, item, itemId, dkp);
 }
 
