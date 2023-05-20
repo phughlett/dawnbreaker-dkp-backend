@@ -50,8 +50,10 @@ characterRoute
   })
   .post(async(req, res)=> {
 
+    await manualUpload(req.body)
 
-    await manualUpload(req.files.file)
+
+
 
 
 
