@@ -183,7 +183,7 @@ export async function updateSessionLedger(sessionId, update) {
 
   let match = sessionLedger.find((sessionItem) => sessionItem.id === update.id);
 
-  if (update.itemId !== 0) {
+  if (update.itemId !== '0') {
     let olddkp = match.dkp;
     update.dkp = parseInt(update.dkp);
     let dkpDiff = update.dkp - olddkp;
