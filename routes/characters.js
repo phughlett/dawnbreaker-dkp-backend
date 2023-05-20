@@ -11,7 +11,7 @@ characterRoute
     db.getCharacters()
       .then((response) => res.status(200).json(response))
       .catch((err) => {
-        console.error("Error @ /raidteams GET", err);
+        console.error("Error @ /characters GET", err);
         res.status(400).json(err);
       });
   })
@@ -49,18 +49,22 @@ characterRoute
 
   })
   .post(async(req, res)=> {
-
     await manualUpload(req.body)
-
-
-
-
-
-
     res.status(200).json('hi')
+  });
 
+  characterRoute
+  .route("/team/:raid_team")
+  .get((req,res) => {
+    let { raid_team } = req.params;
+
+    db.getCharactersByRaid(raid_team)
+    .then((response) => res.status(200).json(response))
+    .catch((err) => {
+      console.error("Error @ /characters/team/:raid_team GET", err);
+      res.status(400).json(err);
+    });
   })
-
 
 
 

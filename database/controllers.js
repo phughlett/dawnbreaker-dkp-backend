@@ -27,6 +27,10 @@ const db = {
     return knex('characters').where({id})
   },
 
+  getCharactersByRaid: (raid_team) => {
+    return knex('characters').where({raid_team})
+  },
+
   addCharacter: (name) => {
     const dkp = 10;//initial balance for joining
     return knex('characters').insert({name, dkp})
