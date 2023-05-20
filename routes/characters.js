@@ -1,5 +1,7 @@
 import express from "express";
 import db from "../database/controllers.js";
+import manualUpload from "../core/manualUpload.js"
+
 
 const characterRoute = express.Router();
 
@@ -39,7 +41,25 @@ characterRoute
 
     res.status(200).json(updatedCharacters)
 
+  });
+
+  characterRoute
+  .route("/manual")
+  .get((req,res) => {
+
   })
+  .post(async(req, res)=> {
+
+
+    await manualUpload(req.files.file)
+
+
+
+    res.status(200).json('hi')
+
+  })
+
+
 
 
 export default characterRoute;

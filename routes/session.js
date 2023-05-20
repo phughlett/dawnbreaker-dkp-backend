@@ -24,13 +24,13 @@ sessionRoute
   .post(async (req, res) => {
     console.log(req.body);
     let { sessionData, action, sessionName, character } = req.body;
-
     if (action === "CREATE") {
       //validate string
-      let sessionInit = sessionData.slice(0, 17);
-      if (!sessionData) {
+      if (Object.keys(sessionData).length === 0) {
         return res.status(406).json("No Session Data");
-      } else if (sessionInit !== "beginSessionInit:") {
+      }
+      let sessionInit = sessionData.slice(0, 17);
+      if (sessionInit !== "beginSessionInit:") {
         return res.status(406).json("Improper Session String");
       }
       //Create a table to hold the session data
