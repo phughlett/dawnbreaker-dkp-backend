@@ -17,7 +17,9 @@ cron.schedule('0 0 * * 2', async () => {
 })
 
 
-https
+if(process.env.NODE_ENV === 'staging'){
+
+  https
   .createServer(
 		// Provide the private and public key to the server by reading each
 		// file's content with the readFileSync() method.
@@ -27,12 +29,12 @@ https
     },
     app
   ).listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
+    console.log(`HTTPS Server is listening on port ${PORT}`);
   })
 
-
-
-// app.listen(PORT, () => {
-//   console.log(`Server is listening on port ${PORT}`);
-// })
+}else{
+app.listen(PORT, () => {
+  console.log(`HTTP Server is listening on port ${PORT}`);
+})
+}
 
