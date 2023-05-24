@@ -50,16 +50,16 @@ const db = {
     return knex('ledger').select();
   },
 
-  getLedgerByRaidTeam: (raid_team) => {
-    return knex('ledger').where({raid_team}).select();
-  },
-
   addLedgerTransaction: (raid_team, character_name, item, itemId, dkp)=> {
     return knex('ledger').insert({raid_team, character_name, item, itemId, dkp});
   },
 
   removeLedgerTransaction: (id) => {
     return knex('ledger').where({id}).del();
+  },
+
+  getLedgerBetweenDates: (start, end) => {
+    return knex('ledger').where('created_at', '<', start).andWhere('created_at', '>', end)
   },
 
   //Active Sessions

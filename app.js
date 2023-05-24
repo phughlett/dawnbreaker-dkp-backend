@@ -6,6 +6,7 @@ import upload from 'express-fileupload'
 
 
 
+
 const app = express()
 
 
@@ -27,6 +28,8 @@ app.use('/raidteam', raidTeamRoute);
 app.use('/characters', characterRoute);
 app.use('/session', sessionRoute);
 app.use('/ledger', ledgerRoute);
+
+
 
 
 app.get('/', (req, res) => {
