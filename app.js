@@ -24,7 +24,7 @@ app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 app.use(upload());
-app.use(morgan('tiny'));
+app.use(morgan('short'));
 app.use('/raidteam', raidTeamRoute);
 app.use('/characters', characterRoute);
 app.use('/session', sessionRoute);
