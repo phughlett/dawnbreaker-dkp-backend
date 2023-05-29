@@ -8,7 +8,7 @@ const knexfile = {
 
   development: {
     client: 'postgresql',
-    connection: process.env.CONNECTION_STRING
+    connection: process.env.CONNECTION
   },
 
   staging: {
