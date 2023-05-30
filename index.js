@@ -19,8 +19,6 @@ cron.schedule(
   }
 );
 
-await dkpDecay();
-
 if (process.env.NODE_ENV === "staging") {
   https
     .createServer(
