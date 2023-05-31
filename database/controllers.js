@@ -58,8 +58,18 @@ const db = {
     return knex('ledger').where({id}).del();
   },
 
+  updateLedgerTransaction: (id, update) => {
+    let {raid_team, character_name, item, itemId, dkp} = update
+    let updated_at = new Date();
+    return knex('ledger').where({id}).update({raid_team, character_name, item, itemId, dkp, updated_at})
+  },
+
   getLedgerBetweenDates: (start, end) => {
     return knex('ledger').where('created_at', '<', start).andWhere('created_at', '>', end)
+  },
+
+  getLedgerEntryById: (id) => {
+    return knex('ledger').where({id})
   },
 
   //Active Sessions
@@ -94,7 +104,8 @@ const db = {
   },
 
   updateSessionLedger: (sessionName, id, raid_team, character_id, item, itemId, dkp) => {
-    return knex(`${sessionName}_ledger`).where({id}).update({raid_team, character_id, item, itemId, dkp})
+    let updated_at = new Date()
+    return knex(`${sessionName}_ledger`).where({id}).update({raid_team, character_id, item, itemId, dkp, updated_at})
   },
 
   deleteSessionLedgerEntry: (sessionName, id) => {

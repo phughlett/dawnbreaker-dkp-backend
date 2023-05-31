@@ -103,7 +103,7 @@ export async function checkForNewCharacters(sessionData) {
       let addedChar = await db.getCharactersByName(character)
       addedChar = addedChar[0]
       await db.addLedgerTransaction(addedChar.raid_team, addedChar.id, "Initial DKP", 0, 10)
-      console.log("Added new character: ", addedChar);
+      console.log("Added new character: ", character);
     }
   }
   console.log("New Character Check Complete.");
@@ -197,7 +197,7 @@ export async function updateSessionLedger(sessionId, update) {
     await db.adjustDKP(character.name, newdkpAmount);
   }
 
-  return await db.updateSessionLedger(
+  await db.updateSessionLedger(
     session.name,
     id,
     raid_team,
@@ -206,6 +206,8 @@ export async function updateSessionLedger(sessionId, update) {
     itemId,
     dkp
   );
+
+  return db.getSessionLedger(session.name)
 }
 
 export async function deleteSessionLedgerEntry(sessionId, update) {

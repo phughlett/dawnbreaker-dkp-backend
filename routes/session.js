@@ -140,9 +140,17 @@ sessionRoute
         });
     } else {
       let { update } = req.body;
-      await updateSessionLedger(sessionId, update);
-      //TODO needs to return the updated session
-      res.status(200).json("Success!");
+      updateSessionLedger(sessionId, update)
+      .then(response => {
+        res.status(200).json(response);
+
+      })
+      .catch((err) => {
+        console.error('Err Updating Session',err)
+        res.status(500).json(err)
+      })
+
+
     }
   });
 
