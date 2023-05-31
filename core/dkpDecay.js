@@ -2,8 +2,6 @@ import db from "../database/controllers.js";
 
 
 export default async function dkpDecay() {
-  let decayAmount = 20//standard is 20, will change person has < 20 to get them to 0
-
   let today = new Date();
   let decay = getDecayDay(today);
   console.log('Today: ', today)
@@ -21,22 +19,23 @@ export default async function dkpDecay() {
   let decayList = operation(charactersWithDKP, ledgerCheck)
 
   for(let i = 0; i < decayList.length; ++i){
+    let decayAmount = 20//standard is 20, will change person has < 20 to get them to 0
     let char = decayList[i];
 
     console.log('DKP Decaying: ', char.name);
 
     if(char.dkp < 20){
-      decayAmount = char.dkp;
+      standardDecay = char.dkp;
     }
 
-    let dkpDecayAmount = char.dkp - decayAmount;
+    let dkpDecayAmount = char.dkp - standardDecay;
 
     if(dkpDecayAmount < 0){
       dkpDecayAmount = 0;
     }
 
     await db.adjustDKP(char.name, dkpDecayAmount);
-    await db.addLedgerTransaction(char.raid_team, char.id, "DKP Decay", 0, -decayAmount)
+    await db.addLedgerTransaction(char.raid_team, char.id, "DKP Decay", 0, -standardDecay)
   }
 
 
