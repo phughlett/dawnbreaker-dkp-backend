@@ -100,7 +100,10 @@ export async function checkForNewCharacters(sessionData) {
     let matchedName = characterList.filter((match) => match.name === character);
     if (matchedName.length === 0) {
       await db.addCharacter(character);
-      console.log("Added new character: ", character);
+      let addedChar = await db.getCharactersByName(character)
+      addedChar = addedChar[0]
+      await db.addLedgerTransaction(addedChar.raid_team, addedChar.id, "Initial DKP", 0, 10)
+      console.log("Added new character: ", addedChar);
     }
   }
   console.log("New Character Check Complete.");
