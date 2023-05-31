@@ -25,17 +25,17 @@ export default async function dkpDecay() {
     console.log('DKP Decaying: ', char.name);
 
     if(char.dkp < 20){
-      standardDecay = char.dkp;
+      decayAmount = char.dkp;
     }
 
-    let dkpDecayAmount = char.dkp - standardDecay;
+    let dkpDecayAmount = char.dkp - decayAmount;
 
     if(dkpDecayAmount < 0){
       dkpDecayAmount = 0;
     }
 
     await db.adjustDKP(char.name, dkpDecayAmount);
-    await db.addLedgerTransaction(char.raid_team, char.id, "DKP Decay", 0, -standardDecay)
+    await db.addLedgerTransaction(char.raid_team, char.id, "DKP Decay", 0, -decayAmount)
   }
 
 
