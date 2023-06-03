@@ -14,6 +14,9 @@ export async function processLedgerUpdate(update){
   }
 
   let newCharacterDKP =  (character.dkp + dkpDiff)
+  if(newCharacterDKP > 250){
+    newCharacterDKP = 250
+  }
   await db.adjustDKP(character.name, newCharacterDKP)//change dkp to new amount
 
 
@@ -26,6 +29,9 @@ export async function processLedgerDelete(update){
   let character = await db.getCharacterById(update.character_name)
   character = character[0]
   let newCharacterDKP =  (character.dkp + (update.dkp*-1))//reverse the effect of the entry
+  if(newCharacterDKP > 250){
+    newCharacterDKP = 250
+  }
 
 
   await db.adjustDKP(character.name, newCharacterDKP)//change dkp to new amount
@@ -43,6 +49,9 @@ export async function processLedgerAdd(update){
   }
 
   let newCharacterDKP =  (character.dkp + parseInt(update.dkp))
+  if(newCharacterDKP > 250){
+    newCharacterDKP = 250
+  }
   await db.adjustDKP(character.name, newCharacterDKP)//change dkp to new amount
 
 
