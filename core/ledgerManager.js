@@ -38,8 +38,8 @@ export async function processLedgerAdd(update){
   let character = await db.getCharacterById(update.character_name)
   character = character[0]
 
-  if (update.raid === ''){
-    update.raid = null
+  if (update.raid_team === ''){
+    update.raid_team = null
   }
 
   let newCharacterDKP =  (character.dkp + parseInt(update.dkp))
