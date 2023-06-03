@@ -32,3 +32,16 @@ export async function processLedgerDelete(update){
   await db.removeLedgerTransaction(update.id)
   return db.getLedger()
 }
+
+export async function processLedgerAdd(update){
+
+  let character = await db.getCharacterById(update.character_name)
+  character = character[0]
+
+  let newCharacterDKP =  (character.dkp + parseInt(update.dkp))
+  await db.adjustDKP(character.name, newCharacterDKP)//change dkp to new amount
+
+
+  await db.addLedgerTransaction(update.raid_team, update.character_name, update.item, update.itemId, update.dkp)
+  return db.getLedger()
+}

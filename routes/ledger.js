@@ -1,6 +1,6 @@
 import express from "express";
 import db from "../database/controllers.js";
-import {processLedgerUpdate, processLedgerDelete} from "../core/ledgerManager.js"
+import {processLedgerUpdate, processLedgerDelete, processLedgerAdd} from "../core/ledgerManager.js"
 
 const ledgerRoute = express.Router();
 
@@ -45,6 +45,16 @@ ledgerRoute
       })
 
     }else if(action === "ADD_ITEM"){
+      console.log('Ledger ADD_ITEM', update)
+
+      processLedgerAdd(update)
+      .then((response) => {
+        res.status(200).json(response)
+      })
+      .catch((err) => {
+        console.error(err)
+        return res.status(500).json(err);
+      })
 
 
     }else{
