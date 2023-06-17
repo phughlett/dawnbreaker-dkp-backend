@@ -70,10 +70,10 @@ export async function dkpSquish(squishAmount = 85){
 
   for(let i = 0; i < charsWithDkp.length; ++i){
     let char = charsWithDkp[i];
-    let dkpSquishTotal = Math.ceil(char.dkp * squishPercentage);
+    let dkpSquishTotal = Math.ceil(char.dkp * squishPercentage) + 10;
 
     let newCharDkp = char.dkp - dkpSquishTotal
-    await db.addLedgerTransaction(char.raid_team, char.id, `DKP Squish ${squishAmount}%`, 0, -dkpSquishTotal)
+    await db.addLedgerTransaction(char.raid_team, char.id, `DKP Squish ${squishAmount}% + 10`, 0, -dkpSquishTotal)
     await db.adjustDKP(char.name, newCharDkp)
   }
 
