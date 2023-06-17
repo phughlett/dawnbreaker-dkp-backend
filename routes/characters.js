@@ -50,12 +50,10 @@ characterRoute
 
 characterRoute.route("/team/:raid_team").get((req, res) => {
   let { raid_team } = req.params;
-  console.log(raid_team)
 
   if ((raid_team === '0')) {
     db.getUnassignedWithDKP()
     .then((response) => {
-      console.log(response)
       res.status(200).json(response)
     })
     .catch((err) => {
