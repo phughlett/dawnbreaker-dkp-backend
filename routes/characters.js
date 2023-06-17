@@ -1,7 +1,6 @@
 import express from "express";
 import db from "../database/controllers.js";
-import manualUpload from "../core/manualUpload.js"
-
+import manualUpload from "../core/manualUpload.js";
 
 const characterRoute = express.Router();
 
@@ -26,46 +25,51 @@ characterRoute
       });
   });
 
-  characterRoute
+characterRoute
   .route("/:characterName")
-  .get((req,res) => {
-
-  })
-  .patch(async(req, res)=> {
-    console.log(req.body.update)
-    let {raid_team, name, dkp, characterClass, role} = req.body.update;
+  .get((req, res) => {})
+  .patch(async (req, res) => {
+    console.log(req.body.update);
+    let { raid_team, name, dkp, characterClass, role } = req.body.update;
 
     await db.updateCharacter(name, raid_team, dkp, characterClass, role);
 
-    let updatedCharacters = await db.getCharacters
+    let updatedCharacters = await db.getCharacters;
 
-    res.status(200).json(updatedCharacters)
-
+    res.status(200).json(updatedCharacters);
   });
 
-  characterRoute
+characterRoute
   .route("/manual")
-  .get((req,res) => {
-
-  })
-  .post(async(req, res)=> {
-    await manualUpload(req.body)
-    res.status(200).json('hi')
+  .get((req, res) => {})
+  .post(async (req, res) => {
+    manualUpload(req.body)
+      .then((response) => res.status(200).json("hi"))
+      .catch((err) => res.status(400).json(err));
   });
 
-  characterRoute
-  .route("/team/:raid_team")
-  .get((req,res) => {
-    let { raid_team } = req.params;
+characterRoute.route("/team/:raid_team").get((req, res) => {
+  let { raid_team } = req.params;
+  console.log(raid_team)
 
-    db.getCharactersByRaid(raid_team)
-    .then((response) => res.status(200).json(response))
+  if ((raid_team === '0')) {
+    db.getUnassignedWithDKP()
+    .then((response) => {
+      console.log(response)
+      res.status(200).json(response)
+    })
     .catch((err) => {
-      console.error("Error @ /characters/team/:raid_team GET", err);
-      res.status(400).json(err);
-    });
-  })
-
-
+      console.error(err)
+      res.status(400).json(err)
+    })
+  } else {
+    db.getCharactersByRaid(raid_team)
+      .then((response) => res.status(200).json(response))
+      .catch((err) => {
+        console.error("Error @ /characters/team/:raid_team GET", err);
+        res.status(400).json(err);
+      });
+  }
+});
 
 export default characterRoute;

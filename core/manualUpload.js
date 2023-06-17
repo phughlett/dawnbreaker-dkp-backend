@@ -2,6 +2,7 @@ import db from "../database/controllers.js";
 
 export default async function manualUpload(characterArray){
   // console.log(characterArray)
+  throw 'Feature Disabled'
 
   for(let i = 0; i < characterArray.length; ++i){
     let currRow = characterArray[i];

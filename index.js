@@ -2,7 +2,7 @@ import app from "./app.js";
 import fs from "fs";
 import https from "https";
 import cron from "node-cron";
-import dkpDecay from "./core/dkpDecay.js";
+import {dkpDecay} from "./core/dkpManager.js";
 
 const PORT = process.env.PORT || 8080;
 

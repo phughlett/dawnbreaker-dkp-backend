@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../database/controllers.js";
+import {dkpSquish} from "../core/dkpManager.js"
 import 'dotenv/config';
 
 const adminRoute = express.Router();
@@ -20,6 +21,22 @@ adminRoute.route("/")
   }
 
 });
+
+adminRoute.route("/squish")
+.post((req, res) => {
+
+  dkpSquish()
+  .then((response) => {
+    res.status(200).json(response)
+
+  })
+  .catch((err) => {
+    console.log(err)
+    res.status(401).json(err)
+  })
+
+
+})
 
 
 export default adminRoute

@@ -1,7 +1,7 @@
 import db from "../database/controllers.js";
 
 
-export default async function dkpDecay() {
+export async function dkpDecay() {
   let today = new Date();
   let decay = getDecayDay(today);
   console.log('Today: ', today)
@@ -60,3 +60,24 @@ const operation = (list1, list2, isUnion = false) =>
 // const inBoth = (list1, list2) => operation(list1, list2, true),
 //       inFirstOnly = operation,
 //       inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
+
+
+export async function dkpSquish(squishAmount = 85){
+
+  let squishPercentage = squishAmount / 100
+
+  let charsWithDkp = await db.getCharactersWithDKP()
+
+  for(let i = 0; i < charsWithDkp.length; ++i){
+    let char = charsWithDkp[i];
+    let dkpSquishTotal = Math.ceil(char.dkp * squishPercentage);
+
+    let newCharDkp = char.dkp - dkpSquishTotal
+    await db.addLedgerTransaction(char.raid_team, char.id, `DKP Squish ${squishAmount}%`, 0, -dkpSquishTotal)
+    await db.adjustDKP(char.name, newCharDkp)
+  }
+
+  return db.getCharacters()
+
+
+}

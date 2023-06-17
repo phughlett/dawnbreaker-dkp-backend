@@ -44,6 +44,16 @@ const db = {
     return knex('characters').where({name}).update({dkp: amount});
   },
 
+  getCharactersWithDKP: () => {
+
+    return knex('characters').where('dkp', '>', 0)
+
+  },
+
+  getUnassignedWithDKP: () => {
+    return knex('characters').where('dkp', '>', 0).andWhere('raid_team', null)
+  },
+
   //Ledger
 
   getLedger: () => {

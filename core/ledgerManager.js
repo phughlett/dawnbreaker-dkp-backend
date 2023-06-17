@@ -42,6 +42,8 @@ export async function processLedgerDelete(update){
 export async function processLedgerAdd(update){
 
   let character = await db.getCharacterById(update.character_name)
+  if (character.length === 0) throw "Character does not exist!";
+
   character = character[0]
 
   if (update.raid_team === ''){
