@@ -10,6 +10,7 @@ import {
   deleteSessionLedgerEntry,
   addCharacterToSession,
   cancelSession,
+  updateSessionAttendanceDkP
 } from "../core/sessionManager.js";
 
 const sessionRoute = express.Router();
@@ -138,19 +139,27 @@ sessionRoute
           error.message = err;
           res.status(400).json(error);
         });
+    } else if (action === "UPDATE_AWARD_DKP") {
+      let { dkpAmount } = req.body;
+
+      updateSessionAttendanceDkP(sessionId, dkpAmount)
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => {
+          console.error(`Error updating Attendance DKP in Session`,err)
+          res.status(400).json(err);
+        });
     } else {
       let { update } = req.body;
       updateSessionLedger(sessionId, update)
-      .then(response => {
-        res.status(200).json(response);
-
-      })
-      .catch((err) => {
-        console.error('Err Updating Session',err)
-        res.status(500).json(err)
-      })
-
-
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => {
+          console.error("Err Updating Session", err);
+          res.status(500).json(err);
+        });
     }
   });
 

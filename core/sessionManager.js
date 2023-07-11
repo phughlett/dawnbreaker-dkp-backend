@@ -231,3 +231,21 @@ export async function deleteSessionLedgerEntry(sessionId, update) {
 
   return await db.getSessionLedger(session.name);
 }
+
+export async function updateSessionAttendanceDkP(sessionId, dkpAwardAmount) {
+  let session = await db.getActiveSessionByID(sessionId);
+  session = session[0];
+
+  let sessionLedger = await db.getSessionLedger(session.name);
+  let attendanceArray = sessionLedger.filter((entry) => entry.itemId === '0')
+
+
+  for(let i = 0; i < attendanceArray.length; ++i){
+    let entry = attendanceArray[i]
+    entry.dkp = dkpAwardAmount
+    await updateSessionLedger(sessionId, entry)
+  }
+
+  return db.getSessionLedger(session.name);
+
+}
