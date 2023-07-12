@@ -2,8 +2,9 @@ import db from "../database/controllers.js";
 
 
 export async function dkpDecay() {
+  const DKP_DECAY = 21;
   let today = new Date();
-  let decay = getDecayDay(today);
+  let decay = getDateDifference(today, DKP_DECAY);
   console.log('Today: ', today)
   console.log('Decay Date',decay)
 
@@ -42,12 +43,9 @@ export async function dkpDecay() {
 }
 
 
-function getDecayDay(date) {
-  const DKP_DECAY_LENGTH = 21;
-
-
-  let result = new Date(date);
-  result.setDate(result.getDate() - DKP_DECAY_LENGTH)
+function getDateDifference(startDate,numberOfDays ) {
+  let result = new Date(startDate);
+  result.setDate(result.getDate() - numberOfDays)
   return result
 }
 
@@ -79,5 +77,28 @@ export async function dkpSquish(squishAmount = 85){
 
   return db.getCharacters()
 
+
+}
+
+export async function oldCharacterRemoval(){
+  const CHARACTER_DECAY = 60;
+
+  let today = new Date();
+  let charDecayDate = getDateDifference(today, CHARACTER_DECAY);
+  console.log('Today: ', today)
+  console.log('Character Decay Date: ',charDecayDate)
+
+  let characters = await db.getCharacters();
+  let ledgerCheck = await db.getLedgerBetweenDates(today, charDecayDate)
+
+  //Finds the raiders who do not appear on the ledger within the past 60 days
+  let charDecayList = operation(characters, ledgerCheck)
+
+  for(let i = 0; i < charDecayList.length; ++i){
+    let decayChar = charDecayList[i]
+    console.log('Deleting char: ', decayChar)
+    await db.removeCharacterLedgerTransactions(decayChar.id)
+    await db.deleteCharacter(decayChar.name)
+  }
 
 }

@@ -36,6 +36,10 @@ const db = {
     return knex('characters').insert({name, dkp})
   },
 
+  deleteCharacter: (name) => {
+    return knex('characters').where({name}).del()
+  },
+
   updateCharacter: (name, raid_team, dkp, characterClass, role) => {
     return knex('characters').where({name}).update({raid_team, dkp, characterClass, role});
   },
@@ -66,6 +70,10 @@ const db = {
 
   removeLedgerTransaction: (id) => {
     return knex('ledger').where({id}).del();
+  },
+
+  removeCharacterLedgerTransactions: (character_name) => {
+    return knex('ledger').where({character_name}).del();
   },
 
   updateLedgerTransaction: (id, update) => {

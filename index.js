@@ -2,13 +2,16 @@ import app from "./app.js";
 import fs from "fs";
 import https from "https";
 import cron from "node-cron";
-import {dkpDecay} from "./core/dkpManager.js";
+import {dkpDecay, oldCharacterRemoval} from "./core/dkpManager.js";
 
 const PORT = process.env.PORT || 8080;
 
 cron.schedule(
   "0 0 * * 2",
   async () => {
+    console.log("Running Character Decay...");
+    await oldCharacterRemoval();
+    console.log("Character Decay Finished");
     console.log("Running DKP Decay...");
     await dkpDecay();
     console.log("DKP Decay Finished");
@@ -18,6 +21,8 @@ cron.schedule(
     timezone: "America/Los_Angeles",
   }
 );
+
+
 
 if (process.env.NODE_ENV === "staging") {
   https
