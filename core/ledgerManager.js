@@ -60,3 +60,15 @@ export async function processLedgerAdd(update){
   await db.addLedgerTransaction(update.raid_team, update.character_name, update.item, update.itemId, update.dkp)
   return db.getLedger()
 }
+
+export async function getCharacterLedger(charName){
+
+  let character = await db.getCharactersByName(charName)
+
+  if (character.length === 0) throw "Character does not exist!";
+
+  character = character[0]
+
+  return db.getLedgerDataForCharacter(character.id)
+
+}

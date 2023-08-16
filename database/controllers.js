@@ -90,6 +90,10 @@ const db = {
     return knex('ledger').where({id})
   },
 
+  getLedgerDataForCharacter: (character_name) => {
+    return knex('ledger').where({character_name})
+  },
+
   //Active Sessions
 
   getAllActiveSessions:() => {

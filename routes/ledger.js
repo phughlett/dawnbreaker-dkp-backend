@@ -1,6 +1,11 @@
 import express from "express";
 import db from "../database/controllers.js";
-import {processLedgerUpdate, processLedgerDelete, processLedgerAdd} from "../core/ledgerManager.js"
+import {
+  processLedgerUpdate,
+  processLedgerDelete,
+  processLedgerAdd,
+  getCharacterLedger
+} from "../core/ledgerManager.js";
 
 const ledgerRoute = express.Router();
 
@@ -17,52 +22,56 @@ ledgerRoute
   .post(async (req, res) => {
     let { update, action } = req.body;
 
-    if(action === "UPDATE_ITEM"){
-      console.log('Ledger UPDATE_ITEM',update)
+    if (action === "UPDATE_ITEM") {
+      console.log("Ledger UPDATE_ITEM", update);
 
       processLedgerUpdate(update)
-      .then((response) => {
-        res.status(200).json(response)
-      })
-      .catch((err) => {
-        console.error(err)
-        return res.status(500).json(err);
-      })
-
-
-
-
-    }else if(action === "DELETE_ITEM"){
-      console.log('Ledger DELETE_ITEM',update)
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json(err);
+        });
+    } else if (action === "DELETE_ITEM") {
+      console.log("Ledger DELETE_ITEM", update);
 
       processLedgerDelete(update)
-      .then((response) => {
-        res.status(200).json(response)
-      })
-      .catch((err) => {
-        console.error(err)
-        return res.status(500).json(err);
-      })
-
-    }else if(action === "ADD_ITEM"){
-      console.log('Ledger ADD_ITEM', update)
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json(err);
+        });
+    } else if (action === "ADD_ITEM") {
+      console.log("Ledger ADD_ITEM", update);
 
       processLedgerAdd(update)
-      .then((response) => {
-        res.status(200).json(response)
-      })
-      .catch((err) => {
-        console.error(err)
-        return res.status(500).json(err);
-      })
-
-
-    }else{
-      res.status(406)
+        .then((response) => {
+          res.status(200).json(response);
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json(err);
+        });
+    } else {
+      res.status(406);
     }
+  });
+ledgerRoute
+.route("/:charName")
+.get((req, res) => {
+  let { charName } = req.params;
 
-
-  })
-;
+  getCharacterLedger(charName)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.error("Error requesting Ledger data for ${charName}", err);
+      res.status(400).json(err);
+    });
+});
 
 export default ledgerRoute;
