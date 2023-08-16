@@ -10,6 +10,17 @@ import upload from 'express-fileupload'
 const app = express()
 
 
+let morganOptions = {
+  skip: (req, res) => {
+    if(res.statusCode === 304){
+      return true;
+    }else{
+      return false;
+    }
+  }
+}
+
+
 
 
 //routes
@@ -24,7 +35,7 @@ app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 app.use(upload());
-app.use(morgan('common'));
+app.use(morgan('common', morganOptions));
 app.use('/raidteam', raidTeamRoute);
 app.use('/characters', characterRoute);
 app.use('/session', sessionRoute);
