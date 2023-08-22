@@ -96,7 +96,7 @@ export async function oldCharacterRemoval(){
 
   for(let i = 0; i < charDecayList.length; ++i){
     let decayChar = charDecayList[i]
-    console.log('Deleting char: ', decayChar)
+    console.log('Deleting char: ', decayChar.name)
     await db.removeCharacterLedgerTransactions(decayChar.id)
     await db.deleteCharacter(decayChar.name)
   }
