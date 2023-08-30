@@ -55,7 +55,7 @@ const db = {
   },
 
   getUnassignedWithDKP: () => {
-    return knex('characters').where('dkp', '>', 0).andWhere('raid_team', null)
+    return knex('characters').whereNot('dkp', '=', 0).andWhere('raid_team', null)
   },
 
   //Ledger
