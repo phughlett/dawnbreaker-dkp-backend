@@ -64,7 +64,7 @@ export async function dkpSquish(squishAmount = 85){
 
   let squishPercentage = squishAmount / 100
 
-  let allChars = await db.getCharacters
+  let allChars = await db.getCharacters()
 
   for(let i = 0; i < allChars.length; ++i){
     let char = allChars[i];
