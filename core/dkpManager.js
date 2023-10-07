@@ -60,7 +60,7 @@ const operation = (list1, list2, isUnion = false) =>
 //       inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
 
 
-export async function dkpSquish(squishAmount = 85){
+export async function dkpSquish(squishAmount = 80){
 
   let squishPercentage = squishAmount / 100
 
