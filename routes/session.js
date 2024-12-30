@@ -101,10 +101,6 @@ sessionRoute
   .get(async (req, res) => {
     let { sessionId } = req.params;
 
-    if(typeof sessionId !== "number"){
-      return res.status(400).json("Malformed Request");
-    }
-
     let session = await db.getActiveSessionByID(sessionId);
 
     if (session.length === 0) {
