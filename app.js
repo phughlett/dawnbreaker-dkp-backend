@@ -11,13 +11,13 @@ const app = express()
 
 
 let morganOptions = {
-  // skip: (req, res) => {
-  //   if(res.statusCode === 304){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
+  skip: (req, res) => {
+    if(res.statusCode === 304){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }
 
 
