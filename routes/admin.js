@@ -25,7 +25,9 @@ adminRoute.route("/")
 adminRoute.route("/squish")
 .post((req, res) => {
 
-  dkpSquish()
+  let {squishAmount} = req.body
+
+  dkpSquish(squishAmount)
   .then((response) => {
     res.status(200).json(response)
 
